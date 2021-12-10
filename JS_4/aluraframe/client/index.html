@@ -62,10 +62,12 @@
     <script>
         let n1 = new Negociacao(new Date(), 5, 700)
 
-        console.log(n1.quantidade)
         console.log(n1.data)
-        console.log(n1.valor)
-        console.log(n1.volume)
+        let amanha = new Date()
+        amanha.setDate(11)
+
+        n1.data = amanha
+        console.log(n1.data)
     </script>
 </body>
 </html>
