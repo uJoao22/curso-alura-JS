@@ -3,9 +3,9 @@
         this._data = data
         this._quantidade = quantidade
         this._valor = valor
+        Object.freeze(this) //Congelando o objeto, deixando ele imutavel
     }
 
-    //Criando metodos getters
     get volume(){
         return this._quantidade*this.valor
     }
