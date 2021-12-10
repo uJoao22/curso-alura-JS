@@ -1,21 +1,21 @@
     class Negociacao {
     constructor(data, quantidade, valor){
-        //Usando o _ para dizer que as propriedades não devem ser mudadas
         this._data = data
         this._quantidade = quantidade
         this._valor = valor
     }
 
-    getVolume(){
+    //Criando metodos getters
+    get volume(){
         return this._quantidade*this.valor
     }
-    getData(){
+    get data(){
         return this._data
     }
-    getQuantidade(){
+    get quantidade(){
         return this._quantidade
     }
-    getValor(){
+    get valor(){
         return this._valor
     }
 }
