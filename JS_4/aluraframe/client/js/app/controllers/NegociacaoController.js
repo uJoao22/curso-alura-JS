@@ -6,23 +6,14 @@ class NegociacaoController{
         this._inputQuantidade = $("#quantidade")
         this._inputValor = $("#valor")
 
-        let self = this
-        this._listaNegociacoes = new Proxy(new ListaNegociacoes(), { //Criando um proxy da class ListaNegociacoes
-            get(target, prop, reciver){ //Interceptando em caso de chamar um metodo
-                if(['adiciona', 'esvazia'].includes(prop) && typeof(target[prop]) == typeof(Function)){ //Se prop for igual a um dos itens do array e o tipo dele for uma função, faça
-                    return function(){//Alterando a função dos metodos adiciona e esvazia para fazer o update dinamico
-                        Reflect.apply(target[prop], target, arguments)
-                        self._negociacoesView.update(target)
-                    }
-                }
-                return Reflect.get(target, prop, reciver)
-            }
-        })
+        //Instanciando a class ProxyFactory e chamando o metodo create com, 3 parametros
+        this._listaNegociacoes = ProxyFactory.create(new ListaNegociacoes(), ['adiciona', 'esvazia'], model => this._negociacoesView.update(model))
 
         this._negociacoesView = new NegociacoesView($('#negociacoesView'))
         this._negociacoesView.update(this._listaNegociacoes) //Quando executar esta função a tabela devera ser incluida no DOM
 
-        this._mensagem = new Mensagem()
+        this._mensagem = ProxyFactory.create(new Mensagem(), ['texto'], model => this._mensagemView.update(model))
+
         this._mensagemView = new MensagemView($('#mensagemView'))
         this._mensagemView.update(this._mensagem)
     }
@@ -30,18 +21,13 @@ class NegociacaoController{
     adiciona(event){
         event.preventDefault()
         this._listaNegociacoes.adiciona(this._criaNegociacao())
-
         this._mensagem.texto = "Negociação adicionada com sucesso" //Quando for adicionada uma nova negociação irá inserir a mensagem no metodo texto de class Mensagem
-        this._mensagemView.update(this._mensagem)
-
         this._limpaFormulario()
     }
 
     apaga(){
         this._listaNegociacoes.esvazia() //Esvaziando o array que contem as negociações
-
         this._mensagem.texto = "Negociações apagadas com sucesso" //Inserindo a mensagem no alerta de sucesso
-        this._mensagemView.update(this._mensagem) //Exibindo o alerta
     }
 
     _criaNegociacao() {
