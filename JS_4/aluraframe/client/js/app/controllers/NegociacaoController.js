@@ -5,9 +5,9 @@ class NegociacaoController{
         this._inputData = $("#data")
         this._inputQuantidade = $("#quantidade")
         this._inputValor = $("#valor")
-        this._listaNegociacoes = new ListaNegociacoes(this, function(model){ //Instanciando o objeto e passando como parametro o contexto à ser executado, e uma função anonima com os dados da instancia
+        this._listaNegociacoes = new ListaNegociacoes(model =>  //Usando a arrow function para manter o escopo do this, seu contexto
             this._negociacoesView.update(model) //Função para atualizar a view, os dados da tabela
-        })
+        )
 
         this._negociacoesView = new NegociacoesView($('#negociacoesView'))
         this._negociacoesView.update(this._listaNegociacoes) //Quando executar esta função a tabela devera ser incluida no DOM
