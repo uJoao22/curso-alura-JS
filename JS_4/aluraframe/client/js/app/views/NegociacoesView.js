@@ -17,18 +17,25 @@ class NegociacoesView {
             </thead>
 
             <tbody>
-                ${model.negociacoes.map(n => { //Mapeando os dados da negociação que está em formato de array para serem inseridos dinamicamente
-                    return `
-                        <tr>
-                            <td>${DateHelper.dataParaTexto(n.data)}</td>
-                            <td>${n.quantidade}</td>
-                            <td>${n.valor}</td>
-                            <td>${n.volume}</td>
-                        </tr>`
-                }).join('') /*Usando o join para concatenar todas as strings e retornar apenas uma string para o template string pai*/ }
+                ${model.negociacoes.map(n => //Mapeando os dados da negociação que está em formato de array para serem inseridos dinamicamente
+                    `<tr>
+                        <td>${DateHelper.dataParaTexto(n.data)}</td>
+                        <td>${n.quantidade}</td>
+                        <td>${n.valor}</td>
+                        <td>${n.volume}</td>
+                    </tr>`
+                ).join('') /*Usando o join para concatenar todas as strings e retornar apenas uma string para o template string pai*/ }
             </tbody>
 
             <tfoot>
+                <td colspan="3"></td>
+                <td>${
+                    (function(){ //Criando uma função autoinvocavel para executar blocos de código na template string
+                        let total = 0
+                        model.negociacoes.forEach(n => total+=n.volume)
+                        return total
+                    })()
+                }</td>
             </tfoot>
         </table> `
 
