@@ -6,17 +6,15 @@ class NegociacaoController{
         this._inputQuantidade = $("#quantidade")
         this._inputValor = $("#valor")
 
-        this._negociacoesView = new NegociacoesView($('#negociacoesView'))
         this._listaNegociacoes = new Bind( //Instanciando a class ProxyFactory e chamando o metodo create com, 3 parametros
             new ListaNegociacoes(), //MOdelo
-            this._negociacoesView, //View
-            ['adiciona', 'esvazia']) //Condição para instanciar
+            new NegociacoesView($('#negociacoesView')), //View
+            'adiciona', 'esvazia') //Condição para instanciar
 
-        this._mensagemView = new MensagemView($('#mensagemView'))
         this._mensagem = new Bind(
             new Mensagem(),
-            this._mensagemView,
-            ['texto'])
+            new MensagemView($('#mensagemView')),
+            'texto')
     }
 
     adiciona(event){
