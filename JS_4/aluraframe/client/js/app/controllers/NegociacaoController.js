@@ -6,10 +6,18 @@ class NegociacaoController{
         this._inputQuantidade = $("#quantidade")
         this._inputValor = $("#valor")
 
-        // ?????????
-        // this._listaNegociacoes = new ListaNegociacoes(model =>  //Usando a arrow function para manter o escopo do this, seu contexto
-        //     this._negociacoesView.update(model) //Função para atualizar a view, os dados da tabela
-        // )
+        let self = this
+        this._listaNegociacoes = new Proxy(new ListaNegociacoes(), { //Criando um proxy da class ListaNegociacoes
+            get(target, prop, reciver){ //Interceptando em caso de chamar um metodo
+                if(['adiciona', 'esvazia'].includes(prop) && typeof(target[prop]) == typeof(Function)){ //Se prop for igual a um dos itens do array e o tipo dele for uma função, faça
+                    return function(){//Alterando a função dos metodos adiciona e esvazia para fazer o update dinamico
+                        Reflect.apply(target[prop], target, arguments)
+                        self._negociacoesView.update(target)
+                    }
+                }
+                return Reflect.get(target, prop, reciver)
+            }
+        })
 
         this._negociacoesView = new NegociacoesView($('#negociacoesView'))
         this._negociacoesView.update(this._listaNegociacoes) //Quando executar esta função a tabela devera ser incluida no DOM

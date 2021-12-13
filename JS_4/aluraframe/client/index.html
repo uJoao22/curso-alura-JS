@@ -57,21 +57,5 @@
     <script>
         let negociacaoController = new NegociacaoController() //Instanciando o obejto
     </script>
-
-    <script>
-        let lista = new Proxy(new ListaNegociacoes(), { //Criando um proxy da class ListaNegociacoes
-            get(target, prop, reciver){ //Interceptando em caso de alteração dos dados
-                if(['adiciona', 'esvazia'].includes(prop) && typeof(target[prop]) == typeof(Function)){ //Se prop for igual a um dos itens do array e o tipo dele for uma função, faça
-                    return function(){
-                        console.log(`O metodo ${prop} foi interceptado`)
-                        Reflect.apply(target[prop], target, arguments)
-                    }
-                }
-                return Reflect.get(target, prop, reciver)
-            }
-        })
-
-        lista.adiciona(new Negociacao(new Date(), 1, 100))
-    </script>
 </body>
 </html>
