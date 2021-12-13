@@ -6,16 +6,17 @@ class NegociacaoController{
         this._inputQuantidade = $("#quantidade")
         this._inputValor = $("#valor")
 
-        //Instanciando a class ProxyFactory e chamando o metodo create com, 3 parametros
-        this._listaNegociacoes = ProxyFactory.create(new ListaNegociacoes(), ['adiciona', 'esvazia'], model => this._negociacoesView.update(model))
-
         this._negociacoesView = new NegociacoesView($('#negociacoesView'))
-        this._negociacoesView.update(this._listaNegociacoes) //Quando executar esta função a tabela devera ser incluida no DOM
-
-        this._mensagem = ProxyFactory.create(new Mensagem(), ['texto'], model => this._mensagemView.update(model))
+        this._listaNegociacoes = new Bind( //Instanciando a class ProxyFactory e chamando o metodo create com, 3 parametros
+            new ListaNegociacoes(), //MOdelo
+            this._negociacoesView, //View
+            ['adiciona', 'esvazia']) //Condição para instanciar
 
         this._mensagemView = new MensagemView($('#mensagemView'))
-        this._mensagemView.update(this._mensagem)
+        this._mensagem = new Bind(
+            new Mensagem(),
+            this._mensagemView,
+            ['texto'])
     }
 
     adiciona(event){
