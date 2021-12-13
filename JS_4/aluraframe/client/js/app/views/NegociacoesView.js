@@ -1,5 +1,5 @@
 class NegociacoesView {
-    constructor(elemento){ //Recebendon a div #negociacoesView como parametro
+    constructor(elemento){ //Recebendo a div #negociacoesView como parametro
         this._elemento = elemento
     }
 
