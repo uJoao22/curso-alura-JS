@@ -1,6 +1,6 @@
-class NegociacoesView {
-    constructor(elemento){ //Recebendo a div #negociacoesView como parametro
-        this._elemento = elemento
+class NegociacoesView extends View{ //Essta class herda tudo o que pertencie a class View
+    constructor(elemento){ //Herdando o objeto construido na class View
+        super(elemento)
     }
 
     _template(model) { //Recebendo os dados inseridos por parametro
@@ -34,9 +34,5 @@ class NegociacoesView {
             </tfoot>
         </table> `
 
-    }
-
-    update(model){ //Quando o metodo update for chamado ele irá inserir a tabela na div #negociacoesView e recebendo como parametro os dados a serem incluidos
-        this._elemento.innerHTML = this._template(model) //Inserir no DOM os dados do metodo _templade com o model como parametro
     }
 }
