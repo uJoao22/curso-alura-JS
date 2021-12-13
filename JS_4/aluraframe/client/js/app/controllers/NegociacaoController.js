@@ -5,7 +5,9 @@ class NegociacaoController{
         this._inputData = $("#data")
         this._inputQuantidade = $("#quantidade")
         this._inputValor = $("#valor")
-        this._listaNegociacoes = new ListaNegociacoes()
+        this._listaNegociacoes = new ListaNegociacoes(this, function(model){ //Instanciando o objeto e passando como parametro o contexto à ser executado, e uma função anonima com os dados da instancia
+            this._negociacoesView.update(model) //Função para atualizar a view, os dados da tabela
+        })
 
         this._negociacoesView = new NegociacoesView($('#negociacoesView'))
         this._negociacoesView.update(this._listaNegociacoes) //Quando executar esta função a tabela devera ser incluida no DOM
@@ -18,7 +20,6 @@ class NegociacaoController{
     adiciona(event){
         event.preventDefault()
         this._listaNegociacoes.adiciona(this._criaNegociacao())
-        this._negociacoesView.update(this._listaNegociacoes) //Quando o metodo adicona for chamada, deverá executar o update na tabel
 
         this._mensagem.texto = "Negociação adicionada com sucesso" //Quando for adicionada uma nova negociação irá inserir a mensagem no metodo texto de class Mensagem
         this._mensagemView.update(this._mensagem)
@@ -28,7 +29,6 @@ class NegociacaoController{
 
     apaga(){
         this._listaNegociacoes.esvazia() //Esvaziando o array que contem as negociações
-        this._negociacoesView.update(this._listaNegociacoes) //Fazendo a tabela atualizar na view e apagar
 
         this._mensagem.texto = "Negociações apagadas com sucesso" //Inserindo a mensagem no alerta de sucesso
         this._mensagemView.update(this._mensagem) //Exibindo o alerta
