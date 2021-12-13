@@ -25,28 +25,17 @@ class NegociacaoController{
     }
 
     importaNegociacoes(){
-        //USANDO AJAX COM JAVASCRIPT PURO
-        let xhr = new XMLHttpRequest() //Criando uma instancia de XMLHttp
-
-        xhr.open('GET', 'negociacoes/semana') //Preparando para abrir o servidor XMLHttp no metodo GET para o endreço local negociacoes/semana
-
-        // Configurações
-        xhr.onreadystatechange = () => { //Toda vez que uma requisição ajax mudar de estado, ela irá executar está função
-            if(xhr.readyState == 4){ //Conferindo se os dados foram recebidos
-
-                if(xhr.status == 200){ //Conferindo se veio os dados que requisitei
-
-                    JSON.parse(xhr.responseText).map(objeto => new Negociacao(new Date(objeto.data),  objeto.quantidade, objeto.valor)).forEach(negociacao =>  this._listaNegociacoes.adiciona(negociacao)) //Convertendo a resposta em JSON e mapeando ela usando o forEach e instanciando a Negociacao, e pra cada item que gerou, uso o forEach para percorrer e adicionar na View, na tabela
-
-                    this._mensagem.texto = "Negociações importadas com sucesso."
-                } else {
-                    console.log(xhr.responseText)
-                    this._mensagem.texto = "Não foi possível obter as negociações."
-                }
+        let service = new NegociacaoServices()
+        service.obterNegociacoesDaSemana((erro, negociacoes) => {
+            if(erro){
+                this._mensagem.texto = erro
+                return
             }
-        }
 
-        xhr.send() //Eecutar a operação de abrir
+            negociacoes.forEach((negociacao => this._listaNegociacoes.adiciona(negociacao)))
+            this._mensagem.texto = "Negociações importadas com sucesso"
+
+        })
     }
 
     apaga(){
