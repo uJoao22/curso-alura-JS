@@ -3,7 +3,7 @@ class MensagemView extends View { //Essta class herda tudo o que pertencie a cla
         super(elemento)
     }
 
-    _template(model){
+    template(model){
         return model.texto ? `<p class="alert alert-info">${model.texto}</p>` : `<p></p>`
     }
 }

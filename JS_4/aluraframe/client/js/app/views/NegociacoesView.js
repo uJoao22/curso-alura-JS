@@ -3,7 +3,7 @@ class NegociacoesView extends View{ //Essta class herda tudo o que pertencie a c
         super(elemento)
     }
 
-    _template(model) { //Recebendo os dados inseridos por parametro
+    template(model) { //Recebendo os dados inseridos por parametro
         //Usando a template string para retornar a tabela com os dados
         return `
         <table class="table table-hover table-bordered">
