@@ -6,6 +6,9 @@ class NegociacaoController{
         this._inputQuantidade = $("#quantidade")
         this._inputValor = $("#valor")
         this._listaNegociacoes = new ListaNegociacoes()
+        this._negociacoesView = new NegociacoesView($('#negociacoesView'))
+
+        this._negociacoesView.update() //Quando executar esta função a tabela devera ser incluida no DOM
     }
 
     adiciona(event){
