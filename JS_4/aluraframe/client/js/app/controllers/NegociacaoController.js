@@ -24,6 +24,26 @@ class NegociacaoController{
         this._limpaFormulario()
     }
 
+    importaNegociacoes(){
+        //USANDO AJAX COM JAVASCRIPT PURO
+        let xhr = new XMLHttpRequest() //Criando uma instancia de XMLHttp
+
+        xhr.open('GET', 'negociacoes/semana') //Preparando para abrir o servidor XMLHttp no metodo GET para o endreço local negociacoes/semana
+
+        // Configurações
+        xhr.onreadystatechange = () => { //Toda vez que uma requisição ajax mudar de estado, ela irá executar está função
+            if(xhr.readyState == 4){
+                if(xhr.status == 200){
+
+                } else {
+                    console.log("Não foi possivel obter as negociações do servidor")
+                }
+            }
+        }
+
+        xhr.send() //Eecutar a operação de abrir
+    }
+
     apaga(){
         this._listaNegociacoes.esvazia() //Esvaziando o array que contem as negociações
         this._mensagem.texto = "Negociações apagadas com sucesso" //Inserindo a mensagem no alerta de sucesso
