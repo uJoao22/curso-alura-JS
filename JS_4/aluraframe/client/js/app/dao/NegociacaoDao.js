@@ -14,9 +14,8 @@ class NegociacaoDao{
                 .objectStore(this._store)
                 .add(negociacao)
 
-            request.onsuccess = e => { //Se a adição de dados na ObjectStore der certo, faça
-                resolve() //Enviando o resolve na promise, informando que ela "Cumpriu o que prometeu"
-            }
+            //Se a adição de dados na ObjectStore der certo, faça
+            request.onsuccess = e => resolve() //Enviando o resolve na promise, informando que ela "Cumpriu o que prometeu"
 
             request.onerror = e => { //Se a adição dder errado, retorne o erro
                 console.log(e.target.error) //Imprimindo o erro no console
@@ -46,14 +45,30 @@ class NegociacaoDao{
 
                     //Fazendo com que o cursor chame a função 'onsuccess' de novo, mas desta vez com o ponteiro apontando para o proximo item
                     atual.continue()
-                } else { //Se não tiver dados para listar, ou tiver listado todos, faça
+                } else //Se não tiver dados para listar, ou tiver listado todos, faça
                     resolve(negociacoes) //Passando para resolve o array com os dados das negociacoes
-                }
             }
 
             cursor.onerror = e => {
                 console.log(e.target.error)
                 reject("Não foi possível listar as negociações")
+            }
+        })
+    }
+
+    apagaTodos(){
+        return new Promise((resolve, reject) => {
+            //Fazendo a transação para ter acesso ao ObjectStore, acessando o ObjectStore e eecutando um método clear, onde irá retornar uma requisição
+            let request = this._connection
+                .transaction([this._store], 'readwrite')
+                .objectStore(this._store)
+                .clear()
+
+            request.onsuccess = e => resolve("Negociações apagadas com sucesso")
+
+            request.onerror = e => {
+                console.log(e.target.error)
+                reject("Não foi possível apagar as negociações")
             }
         })
     }
