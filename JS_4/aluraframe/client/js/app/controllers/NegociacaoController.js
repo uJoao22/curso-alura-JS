@@ -19,9 +19,18 @@ class NegociacaoController{
 
     adiciona(event){
         event.preventDefault()
-        this._listaNegociacoes.adiciona(this._criaNegociacao())
-        this._mensagem.texto = "Negociação adicionada com sucesso" //Quando for adicionada uma nova negociação irá inserir a mensagem no metodo texto de class Mensagem
-        this._limpaFormulario()
+
+        ConnectionFactory.getConnection().then(connection => { //Criando a conexão com o banco IndexedDB
+            let negociacao = this._criaNegociacao() //Instanciando o metodo para criar a negociação
+
+            //Instanciando NegociacaoDao, passando por parametro a conexão criada na class ConnectionFactory e adicionando na ObjectStore definida em NegociacaoDao os dados da negociacao
+            new NegociacaoDao(connection).adiciona(negociacao).then(() => {
+                //Inserindo os dados na lista de negociacao para ver na teça
+                this._listaNegociacoes.adiciona(negociacao)
+                this._mensagem.texto = "Negociação adicionada com sucesso" //Quando for adicionada uma nova negociação irá inserir a mensagem no metodo texto de class Mensagem
+                this._limpaFormulario()
+            })
+        }).catch(erro => this._mensagem.texto = erro)
     }
 
     importaNegociacoes(){
@@ -43,8 +52,8 @@ class NegociacaoController{
     _criaNegociacao() {
         return new Negociacao(
             DateHelper.textoParaData(this._inputData.value),
-            this._inputQuantidade.value,
-            this._inputValor.value
+            parseInt(this._inputQuantidade.value),
+            parseFloat(this._inputValor.value)
         )
     }
 
