@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Aprendendo IndexedDB</title>
+</head>
+<body>
+    <script>
+        //Fazendo uma requisição de abertura para o banco de dados indexedDB
+        var openRequest = window.indexedDB.open('aluraframe', 1) //Criando o banco aluraframe
+
+        //EVENTOS PARA ACESSAR O BANCO
+
+        //Este evento cria ou altera um banco já eistente
+        openRequest.onupgradeneeded = e => { //Quando este evento for disparada a função recebi o evento, como e como prametro
+            console.log("Cria ou altera um banco já eistente")
+        }
+
+        //Este evento é executado quando conseguir estabelecer uma conexão
+        openRequest.onsuccess = e => { //
+            console.log("Conexão obtida com sucesso")
+        }
+
+        //Este evento é executado se houver algum erro na conexão
+        openRequest.onerror = e => {
+            console.log(e.target.error) //Imprimindo o erro
+        }
+    </script>
+</body>
+</html>
