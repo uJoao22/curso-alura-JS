@@ -24,4 +24,37 @@ class NegociacaoDao{
             }
         })
     }
+
+    listaTodos(){
+        return new Promise((resolve, reject) => {
+            //Fazendo a transação para ter acesso ao ObjectStore, acessando o ObjectStore e criando um cursor para agir como um ponteiro, apontando todos os itens
+            let cursor = this._connection
+                .transaction([this._store], 'readwrite')
+                .objectStore(this._store)
+                .openCursor()
+
+            let negociacoes = []
+
+            cursor.onsuccess = e => { //Se o cursos for criado com sucesso, faça
+                let atual = e.target.result //atual recebe os dados que o cursor ta apontando naquele momento
+
+                if(atual){ //Se existem dados apontados pelo cursor, faça
+                    let dado = atual.value //Passando para dado os valores apontados pelo ponteiro
+
+                    //Inserindo no array os dados como uma nova Negociacao
+                    negociacoes.push(new Negociacao(dado._data, dado._quantidade, dado._valor))
+
+                    //Fazendo com que o cursor chame a função 'onsuccess' de novo, mas desta vez com o ponteiro apontando para o proximo item
+                    atual.continue()
+                } else { //Se não tiver dados para listar, ou tiver listado todos, faça
+                    resolve(negociacoes) //Passando para resolve o array com os dados das negociacoes
+                }
+            }
+
+            cursor.onerror = e => {
+                console.log(e.target.error)
+                reject("Não foi possível listar as negociações")
+            }
+        })
+    }
 }

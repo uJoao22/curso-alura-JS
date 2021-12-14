@@ -15,6 +15,13 @@ class NegociacaoController{
             new Mensagem(),
             new MensagemView($('#mensagemView')),
             'texto')
+
+        //Chamando a promessa de getConnection, se ela for success e gerar a conexão, vai ser criado uma instancia de NegociacaoDao com a conexão como parametro e será chamado o método listaTodos como uma promesa, se ela der success um forEach irá iterar cada uma das negociações trazidas da promessa do listaTodos e irá inserir na lista de negociacoes através do metodo adiciona
+        ConnectionFactory.getConnection()
+            .then(connection => new NegociacaoDao(connection))
+            .then(dao => dao.listaTodos())
+            .then(negociacoes => negociacoes.forEach(
+                negociacao => this._listaNegociacoes.adiciona(negociacao)))
     }
 
     adiciona(event){
