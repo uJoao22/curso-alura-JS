@@ -63,6 +63,40 @@
                 console.log("Não foi possível adicionar a Negociação")
             }
         }
+
+        function listaTodos(){
+            //Fazendo a transação para ter acesso ao ObjectStore
+            let transaction = connection.transaction(['negociacoes'], 'readwrite')
+
+            //Acessando o ObjectStore de negociacoes
+            let store = transaction.objectStore('negociacoes')
+
+            //O cursor tem acesso aos dados da ObjectStore, agindo como um ponteiro e apontado um de cada vez
+            let cursor = store.openCursor()
+
+            //Criando o array para incluir as negociações dentro da função de sucesso do cursor
+            let negociacoes = []
+
+            cursor.onsuccess = e => {
+                let atual = e.target.result
+
+                if(atual){ //Se existem dados para extrair da ObjectStore, faça
+                    let dado = atual.value //Passando para dado o valor do dado que o ponteiro está apontando
+
+                    //Inserindo no array os dados como uma nova Negociacao
+                    negociacoes.push(new Negociacao(dado._data, dado._quantidade, dado._valor))
+
+                    //Fazendo com que o cursos chame a função de novo, mas desta vez com o ponteiro apontando para o proximo item
+                    atual.continue()
+                } else { //Se não tiver mais dados para listar, faça
+                    console.log(negociacoes)
+                }
+            }
+
+            cursor.onerror = e => {
+                console.log(e.target.error.name)
+            }
+        }
     </script>
 </body>
 </html>
