@@ -16,7 +16,7 @@
         //EVENTOS PARA ACESSAR O BANCO
 
         //Este evento cria ou altera um banco já eistente
-        openRequest.onupgradeneeded = e => { //Quando este evento for disparada a função recebi o evento, como e como prametro
+        openRequest.onupgradeneeded = e => { //Quando este evento for disparada a função recebe o evento como prametro
             console.log("Cria ou altera um banco já eistente")
             let minhaConnection = e.target.result //Pegando os dados da coneão para criar uma object store
 
