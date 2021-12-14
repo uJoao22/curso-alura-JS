@@ -1,7 +1,7 @@
 class NegociacaoServices{
     //USANDO AJAX COM JAVASCRIPT PURO
     obterNegociacoesDaSemana(){
-        return new Promisse((resolve, reject) => { //Criando a promessa, com os parametros de sucesso e erro
+        return new Promise((resolve, reject) => { //Criando a promessa, com os parametros de sucesso e erro
 
             let xhr = new XMLHttpRequest() //Criando uma instancia de XMLHttp
 
@@ -27,7 +27,7 @@ class NegociacaoServices{
     }
 
     obterNegociacoesDaSemanaAnterior(){
-        return new Promisse((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             let xhr = new XMLHttpRequest()
 
             xhr.open('GET', 'negociacoes/anterior')
@@ -48,7 +48,7 @@ class NegociacaoServices{
     }
 
     obterNegociacoesDaSemanaRetrasada(){
-        return new Promisse((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             let xhr = new XMLHttpRequest()
 
             xhr.open('GET', 'negociacoes/retrasada')
