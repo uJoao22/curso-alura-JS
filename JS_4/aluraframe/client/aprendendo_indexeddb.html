@@ -5,31 +5,63 @@
     <title>Aprendendo IndexedDB</title>
 </head>
 <body>
+    <script src="js/app/models/Negociacao.js"></script> <!-- Importando a class de Negociação -->
+
     <script>
         var connection //Criando uma variavel para a conexão
 
         //Fazendo uma requisição de abertura para o banco de dados indexedDB
-        var openRequest = window.indexedDB.open('aluraframe', 2) //Criando o banco aluraframe, (nome do banco, versão do banco)
+        var openRequest = window.indexedDB.open('aluraframe', 3) //Criando o banco aluraframe, (nome do banco, versão do banco)
 
         //EVENTOS PARA ACESSAR O BANCO
 
         //Este evento cria ou altera um banco já eistente
         openRequest.onupgradeneeded = e => { //Quando este evento for disparada a função recebi o evento, como e como prametro
             console.log("Cria ou altera um banco já eistente")
-            var minhaConnection = e.target.result //Pegando os dados da coneão para criar uma object store
-            minhaConnection.createObjectStore('negociacoes') //Criando uma 'tabela' no banco indexedDB
+            let minhaConnection = e.target.result //Pegando os dados da coneão para criar uma object store
+
+            if(minhaConnection.objectStoreNames.contains('negociacoes')){//Se já existis uma objectStore de negociações, faça
+                minhaConnection.deleteObjectStore('negociacoes') //Destrua a objectStore
+            }
+
+            //Criando uma objectStore de 'negociacoes', com um id de auto incremento
+            minhaConnection.createObjectStore('negociacoes', {autoIncrement: true})
         }
 
         //Este evento é executado quando conseguir estabelecer uma conexão
         openRequest.onsuccess = e => { //
             console.log("Conexão obtida com sucesso")
             connection = e.target.result //Recebendo dados da conexão com o banco
-            console.log(connection)
         }
 
         //Este evento é executado se houver algum erro na conexão
         openRequest.onerror = e => {
             console.log(e.target.error) //Imprimindo o erro
+        }
+
+        function adiciona(){
+            //Toda vez que for gravar dados no banco, deve ser feito uma transação
+            //Fazendo uma transação para dentro do objectStore 'negociacoes', do tipos ler e escrever, 'readwrite'
+            let transaction = connection.transaction(['negociacoes'], 'readwrite')
+
+            //Após a transação acima, solicitando acesso a determinada objectStore
+            let store = transaction.objectStore('negociacoes')
+
+            //Criando uma nova Negociacao
+            let negociacao = new Negociacao(new Date(), 1, 200)
+
+            //Adicionando a Negociacao criada acima dentro do banco IndexedDB e retornando para se deu sucesso ou erro
+            let request = store.add(negociacao)
+
+            //Se de sucessor e conseguir adicinar o objeto dentro do banco, execute
+            request.onsuccess = e => {
+                console.log("Negociação adicionada com sucesso")
+            }
+
+            //Se der erro e não for possível fazer a inserção no banco, execute
+            request.onerror = e => {
+                console.log("Não foi possível adicionar a Negociação")
+            }
         }
     </script>
 </body>
