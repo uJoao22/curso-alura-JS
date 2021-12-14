@@ -1,10 +1,12 @@
 //Colocando tudo dentro de uma função auto invocavel para os dados sairem de um escopo global, onde todos poderiam ter acesso e colocando em um escopo fechado de uma função, retornando a class ConnectionFactory e passando a mesma para a variavel ConnectionFactory
 var ConnectionFactory = (function(){
-    var stores = ['negociacoes']
-    var version = 4
-    var dbName = 'aluraframe'
+    const stores = ['negociacoes']
+    const version = 4
+    const dbName = 'aluraframe'
 
     var connection = null
+
+    var close = null
 
     return  class ConnectionFactory{
         constructor(){
@@ -26,8 +28,13 @@ var ConnectionFactory = (function(){
 
                 //Este evento é executado quando conseguir estabelecer uma conexão
                 openRequest.onsuccess = e => {
-                    if(!connection) //Se connection for nula, faça
+                    if(!connection){ //Se connection for nula, faça
                         connection = e.target.result //connection receber os dados da conexão
+                        close = connection.close.bind(connection) //Fazendo um backup da função de fechar a conexão, para a variavel close, tendo a variavel connection como referencia para o this
+                        connection.close = function() { //Alterando a função do metodo close, para que não possa ser fechado diretamente por qualquer um
+                            throw new Error("Você não pode fechar diretamente a conexão")
+                        }
+                    }
 
                     resolve(connection) //Passando para o resolve da promise, como resultado de sucesso, a connection
                 }
@@ -49,6 +56,13 @@ var ConnectionFactory = (function(){
                 //Após apagar a ObjectStore acima, crie novamente, com o mesmo nome, e tendo sua chave como auto Incremento
                 connection.createObjectStore(store, {autoIncrement: true})
             })
+        }
+
+        static closeConnection(){ //Método estatico para fechar a conexão
+            if(connection) { //Se existir a conexão, faça
+                close() //Fechando a conexão
+                connection = null //E definir a variavel connection como null
+            }
         }
     }
 })()
