@@ -45,17 +45,18 @@ class NegociacaoController{
     }
 
     importaNegociacoes(){
+        //Instanciando a claas NegociacaoService para importar as negociacoes
         let service = new NegociacaoServices()
 
-        //Usando o Promise.all para executar as promises em uma ordem e retornar os resultados dela na mesma ordem e em caso de erro exibir a mensagem de erro, inserindo as promises em um array
-        Promise.all([service.obterNegociacoesDaSemana(), service.obterNegociacoesDaSemanaAnterior(), service.obterNegociacoesDaSemanaRetrasada()])
-            .then(negociacoes => negociacoes.filter(negociacao =>
-                this._listaNegociacoes.negociacoes.indexOf(negociacao) == -1))
-            .then(negociacoes => {
-            negociacoes.reduce((arrayAchatado, array) => arrayAchatado.concat(array), []) //Reduzindo o array com varias negociacoes em apenas as necessarias
-                .forEach(negociacao => this._listaNegociacoes.adiciona(negociacao))
-            this._mensagem.texto = "Negociações importadas com sucesso"
-        }).catch(error => this._mensagem.texto = error)
+        //Chamando o método obterNegociacoes da class instanciada que me retorna os dados da negociacao importadas como uma promesa, se me retornar corretamente, faço um filtro para comparar se aquelas negociações já foram importadas, se não ele importa, se sim não importa, e então se não tiverem sido importadas cria um loop com a lista com todas negociacoes e insere cada negociacao na class listaNegociacao e exibe a mensagem para o usuario, em caso de erro, ele retorna uma mensagem de erro para o ususario
+        service.obterNegociacoes()
+        .then(negociacoes => negociacoes.filter(negociacao =>
+            !this._listaNegociacoes.negociacoes.some(negociacaoExistente =>
+                JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente))))
+        .then(negociacoes => negociacoes.forEach(negociacao => {
+            this._listaNegociacoes.adiciona(negociacao);
+            this._mensagem.texto = 'Negociações do período importadas'
+        })).catch(erro => this._mensagem.texto = erro);
     }
 
     apaga(){
