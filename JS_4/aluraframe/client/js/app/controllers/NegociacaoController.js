@@ -47,15 +47,12 @@ class NegociacaoController{
     }
 
     importaNegociacoes(){
-        //Chamando o método obterNegociacoes da class instanciada que me retorna os dados da negociacao importadas como uma promesa, se me retornar corretamente, faço um filtro para comparar se aquelas negociações já foram importadas, se não ele importa, se sim não importa, e então se não tiverem sido importadas cria um loop com a lista com todas negociacoes e insere cada negociacao na class listaNegociacao e exibe a mensagem para o usuario, em caso de erro, ele retorna uma mensagem de erro para o ususario
-        this._service.obterNegociacoes()
-        .then(negociacoes => negociacoes.filter(negociacao =>
-            !this._listaNegociacoes.negociacoes.some(negociacaoExistente =>
-                JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente))))
-        .then(negociacoes => negociacoes.forEach(negociacao => {
+        //Chamando o metodo importa de NegociacaoServices, passando a lista de negociacoes como parametro, recebendo uma promesa informando se essa lista já foi importada ou não, se não ele importa e informa o ususario, se já existe ele não importa e se der erro, ele informa o erro
+        this._service.importa(this._listaNegociacoes.negociacoes).then(negociacoes => {
+            negociacoes.forEach(negociacao => {
             this._listaNegociacoes.adiciona(negociacao);
-            this._mensagem.texto = 'Negociações do período importadas'
-        })).catch(erro => this._mensagem.texto = erro);
+            this._mensagem.texto = 'Negociações do período importadas'})
+        }).catch(erro => this._mensagem.texto = erro);
     }
 
     apaga(){
