@@ -40,16 +40,13 @@ class NegociacaoController{
     adiciona(event){
         event.preventDefault()
 
-        ConnectionFactory.getConnection().then(connection => { //Criando a conexão com o banco IndexedDB
-            let negociacao = this._criaNegociacao() //Instanciando o metodo para criar a negociação
+        let negociacao = this._criaNegociacao()
 
-            //Instanciando NegociacaoDao, passando por parametro a conexão criada na class ConnectionFactory e adicionando na ObjectStore definida em NegociacaoDao os dados da negociacao
-            new NegociacaoDao(connection).adiciona(negociacao).then(() => {
-                //Inserindo os dados na lista de negociacao para ver na teça
-                this._listaNegociacoes.adiciona(negociacao)
-                this._mensagem.texto = "Negociação adicionada com sucesso" //Quando for adicionada uma nova negociação irá inserir a mensagem no metodo texto de class Mensagem
-                this._limpaFormulario()
-            })
+        new NegociacaoServices().cadastra(negociacao).then(mensagem => {
+            //Inserindo os dados na lista de negociacao para ver na tela
+            this._listaNegociacoes.adiciona(negociacao)
+            this._mensagem.texto = mensagem
+            this._limpaFormulario()
         }).catch(erro => this._mensagem.texto = erro)
     }
 

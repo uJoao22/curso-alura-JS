@@ -51,5 +51,12 @@ class NegociacaoServices{
         }).catch(erro => {
             throw new Error(erro)
         })
-	}
+    }
+
+    cadastra(negociacao){
+        //Estabelecendo a conexão com o banco IndexedDB, se a conexão retornar sucessso, então cria uma nova NegociacaoDao para adicionar os itens no banco, se der certo retorna uma mensagem de sucesso, se não ele retorna uma menssagem de erro
+        return ConnectionFactory.getConnection().then(connection => new NegociacaoDao(connection))
+            .then(dao => dao.adiciona(negociacao)).then(() => "Negociação adicionada com sucesso")
+            .catch(() => {throw new Error("Não foi possível adicionar a negociação")})
+    }
 }

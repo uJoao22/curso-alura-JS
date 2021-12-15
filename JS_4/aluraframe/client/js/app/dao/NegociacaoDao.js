@@ -17,7 +17,7 @@ class NegociacaoDao{
             //Se a adição de dados na ObjectStore der certo, faça
             request.onsuccess = e => resolve() //Enviando o resolve na promise, informando que ela "Cumpriu o que prometeu"
 
-            request.onerror = e => { //Se a adição dder errado, retorne o erro
+            request.onerror = e => { //Se a adição der errado, retorne o erro
                 console.log(e.target.error) //Imprimindo o erro no console
                 reject("Não foi possível adicionar a negociação") //Retornando para o reject uma mensagem, para dizer que "Não foi possível cumprir a promesa"
             }
@@ -34,7 +34,7 @@ class NegociacaoDao{
 
             let negociacoes = []
 
-            cursor.onsuccess = e => { //Se o cursos for criado com sucesso, faça
+            cursor.onsuccess = e => { //Se o cursor for criado com sucesso, faça
                 let atual = e.target.result //atual recebe os dados que o cursor ta apontando naquele momento
 
                 if(atual){ //Se existem dados apontados pelo cursor, faça
