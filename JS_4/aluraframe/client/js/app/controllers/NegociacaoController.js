@@ -16,20 +16,16 @@ class NegociacaoController{
             new MensagemView($('#mensagemView')),
             'texto')
 
+        this._service = new NegociacaoServices()
+
         this._init()
     }
 
     _init(){
-        //Chamando a promessa de getConnection, se ela for success e gerar a conexão, vai ser criado uma instancia de NegociacaoDao com a conexão como parametro e será chamado o método listaTodos como uma promesa, se ela der success um forEach irá iterar cada uma das negociações trazidas da promessa do listaTodos e irá inserir na lista de negociacoes através do metodo adiciona
-        ConnectionFactory.getConnection()
-            .then(connection => new NegociacaoDao(connection))
-            .then(dao => dao.listaTodos())
-            .then(negociacoes => negociacoes.forEach(
-                negociacao => this._listaNegociacoes.adiciona(negociacao)))
-            .catch(error => {
-                console.log(erro)
-                this._mensagem.texto = error
-            })
+        //Instanciando uma NegociacaoSerives e chamando o metodo lista que me retorna uma promesa de que os dados serão listados, se der sucesso, ele pega os dados e insere na lista de negociacoes, de der erro ele exibe a mensagem de erro
+        this._service.lista().then(negociacoes => negociacoes.forEach(
+            negociacao => this._listaNegociacoes.adiciona(negociacao)))
+        .catch(error => this._mensagem.texto = error)
 
         //Chamando o metodo de importaNegociacoes de 3 em 3 segundoss, para que ele messmo se atualize
         setInterval(() => {
@@ -42,7 +38,7 @@ class NegociacaoController{
 
         let negociacao = this._criaNegociacao()
 
-        new NegociacaoServices().cadastra(negociacao).then(mensagem => {
+        this._service.cadastra(negociacao).then(mensagem => {
             //Inserindo os dados na lista de negociacao para ver na tela
             this._listaNegociacoes.adiciona(negociacao)
             this._mensagem.texto = mensagem
@@ -51,11 +47,8 @@ class NegociacaoController{
     }
 
     importaNegociacoes(){
-        //Instanciando a claas NegociacaoService para importar as negociacoes
-        let service = new NegociacaoServices()
-
         //Chamando o método obterNegociacoes da class instanciada que me retorna os dados da negociacao importadas como uma promesa, se me retornar corretamente, faço um filtro para comparar se aquelas negociações já foram importadas, se não ele importa, se sim não importa, e então se não tiverem sido importadas cria um loop com a lista com todas negociacoes e insere cada negociacao na class listaNegociacao e exibe a mensagem para o usuario, em caso de erro, ele retorna uma mensagem de erro para o ususario
-        service.obterNegociacoes()
+        this._service.obterNegociacoes()
         .then(negociacoes => negociacoes.filter(negociacao =>
             !this._listaNegociacoes.negociacoes.some(negociacaoExistente =>
                 JSON.stringify(negociacao) == JSON.stringify(negociacaoExistente))))
@@ -66,13 +59,10 @@ class NegociacaoController{
     }
 
     apaga(){
-        ConnectionFactory.getConnection()
-            .then(connection => new NegociacaoDao(connection))
-            .then(dao => dao.apagaTodos()
-            .then(mensagem => {
-                this._mensagem.texto = mensagem //Inserindo a mensagem no alerta de sucesso
-                this._listaNegociacoes.esvazia() //Esvaziando o array que contem as negociações
-            }))
+        this._service.apaga().then(mensagem => {
+            this._mensagem.texto = mensagem //Inserindo a mensagem no alerta de sucesso
+            this._listaNegociacoes.esvazia() //Esvaziando o array que contem as negociações
+        }).catch(error => this._mensagem.texto(error))
     }
 
     _criaNegociacao() {

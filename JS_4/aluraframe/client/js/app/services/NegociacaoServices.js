@@ -57,6 +57,30 @@ class NegociacaoServices{
         //Estabelecendo a conexão com o banco IndexedDB, se a conexão retornar sucessso, então cria uma nova NegociacaoDao para adicionar os itens no banco, se der certo retorna uma mensagem de sucesso, se não ele retorna uma menssagem de erro
         return ConnectionFactory.getConnection().then(connection => new NegociacaoDao(connection))
             .then(dao => dao.adiciona(negociacao)).then(() => "Negociação adicionada com sucesso")
-            .catch(() => {throw new Error("Não foi possível adicionar a negociação")})
+            .catch((erro) => {
+                console.log(erro)
+                throw new Error("Não foi possível adicionar a negociação")
+            })
+    }
+
+    lista(){
+        return ConnectionFactory.getConnection()
+            .then(connection => new NegociacaoDao(connection))
+            .then(dao => dao.listaTodos())
+            .catch(erro => {
+                console.log(erro)
+                throw new Error("Não foi posssível obter as negociações")
+            })
+    }
+
+    apaga(){
+        return ConnectionFactory.getConnection()
+        .then(connection => new NegociacaoDao(connection))
+        .then(dao => dao.apagaTodos())
+        .then(() => "Negociações apagadas com sucesso")
+        .catch(erro => {
+            console.log(erro)
+            throw new Error("Não foi possível apagar as negociações")
+        })
     }
 }
