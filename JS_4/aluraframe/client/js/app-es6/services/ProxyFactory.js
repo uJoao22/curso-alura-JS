@@ -1,4 +1,4 @@
-class ProxyFactory{
+export class ProxyFactory{
     static create(objeto, props, acao){
         return new Proxy(objeto, { //Criando um proxy da class objeto recebida por parametro
             get(target, prop, reciver){ //Interceptando em caso de chamar um metodo

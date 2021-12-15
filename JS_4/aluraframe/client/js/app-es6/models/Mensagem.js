@@ -1,4 +1,4 @@
-class Mensagem{
+export class Mensagem{
     constructor(texto=''){ //Atribuindo um valor padrão para o parametro do construtor
         this._texto = texto;
     }

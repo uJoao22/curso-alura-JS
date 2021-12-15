@@ -1,4 +1,5 @@
-class NegociacoesView extends View{ //Essta class herda tudo o que pertencie a class View
+import {View} from './View'
+export class NegociacoesView extends View{ //Essta class herda tudo o que pertencie a class View
     constructor(elemento){ //Herdando o objeto construido na class View
         super(elemento)
     }

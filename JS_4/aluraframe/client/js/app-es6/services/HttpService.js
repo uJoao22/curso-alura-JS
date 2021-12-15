@@ -1,4 +1,4 @@
-class HttpService{
+export class HttpService{
     _handleErros(res){
         if(!res.ok) throw new Error(res.statusTexxt) //Se der algum erro, ele irá lançar o erro
         return res //Se estiver tudo ok ele retornar res

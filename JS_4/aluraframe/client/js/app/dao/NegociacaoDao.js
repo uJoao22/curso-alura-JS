@@ -1,10 +1,17 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.NegociacaoDao = undefined;
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _Negociacao = require('../models/Negociacao');
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var NegociacaoDao = function () {
+var NegociacaoDao = exports.NegociacaoDao = function () {
     function NegociacaoDao(connection) {
         _classCallCheck(this, NegociacaoDao);
 
@@ -56,7 +63,7 @@ var NegociacaoDao = function () {
                         var dado = atual.value; //Passando para dado os valores apontados pelo ponteiro
 
                         //Inserindo no array os dados como uma nova Negociacao
-                        negociacoes.push(new Negociacao(dado._data, dado._quantidade, dado._valor));
+                        negociacoes.push(new _Negociacao.Negociacao(dado._data, dado._quantidade, dado._valor));
 
                         //Fazendo com que o cursor chame a função 'onsuccess' de novo, mas desta vez com o ponteiro apontando para o proximo item
                         atual.continue();
