@@ -1,4 +1,5 @@
 import {View} from './View'
+import {DateHelper} from '../helpers/DateHelper'
 export class NegociacoesView extends View{ //Essta class herda tudo o que pertencie a class View
     constructor(elemento){ //Herdando o objeto construido na class View
         super(elemento)

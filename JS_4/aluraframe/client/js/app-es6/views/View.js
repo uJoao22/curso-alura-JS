@@ -1,4 +1,4 @@
-exxport class View{
+export class View{
     constructor(elemento) {
         this._elemento = elemento
     }
